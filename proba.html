@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<div class="main">
+    <a>Entrer un message:</a><input type="text" id="message" required> <br />
+    <a>Entrer un pourcentage de chance que le message apparaisse:</a><input type="number" id="pourcentage" required><a>%</a>
+    <button onclick="valider()">Valider</button>
+    <span id="msg"></span>
+</div>
+
+<script>
+    let values = [];
+    let probas = [];
+
+    function compteurTableau() {
+        var totalProbas = 0;
+        for (let i = 0; i < probas.length; i++) {
+            totalProbas = totalProbas + probas[i]
+        }
+        return totalProbas;
+    }
+
+    function valider() {
+        console.log(values)
+        probaInput = document.getElementById("pourcentage").value / 100
+        if (document.getElementById("message").value === "") return document.getElementById('msg').innerHTML = "Merci d'entrer un message valide."
+        if (compteurTableau() + probaInput <= 1) {
+            values.push(document.getElementById("message").value)
+            probas.push(probaInput)
+            document.getElementById("msg").innerHTML = `le message <strong>${document.getElementById("message").value}</strong> à ${probaInput * 100}% de chances d'apparaitre`
+        } else return document.getElementById("msg").innerHTML = `Veuillez insérer un pourcentage inferieur à ${1 - compteurTableau()}%.`
+    }
+
+    function pickWeightedRandomValue(values, weights) {
+        let rand = Math.random();
+        for (let i = 0; i < weights.length; i++) {
+            if (rand <= weights[i]) return document.getElementById('proba').innerHTML = values[i];
+            rand -= weights[i];
+        }
+    }
+
+    // let result = pickWeightedRandomValue(values, probas);
+</script>

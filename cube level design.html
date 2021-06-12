@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>level design</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="main">
+        <div id="help">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>touches</td>
+                        <td>effets</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>t</td>
+                        <td>pose un teleporteur</td>
+                    </tr>
+                    <tr>
+                        <td>b</td>
+                        <td>pose le point de spawn</td>
+                    </tr>
+                    <tr>
+                        <td>del</td>
+                        <td>pose un mur</td>
+                    </tr>
+                    <tr>
+                        <td>suppr</td>
+                        <td>supprime le bloc</td>
+                    </tr>
+                    <tr>
+                        <td>f</td>
+                        <td>definit la zone de fin</td>
+                    </tr>
+                    <tr>
+                        <td>enter</td>
+                        <td>sort le niveau dans la console</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <canvas id="cubeBoard" width="800" height="600"></canvas>
+    </div>
+
+
+    <style>
+        * {
+            background-color: #606083;
+        }
+        
+        p {
+            margin: 10px 0;
+            padding: 5px;
+            border: 1px solid #999;
+        }
+        
+        .main {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        /*#cubeBoard {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }*/
+        
+        .help {
+            background-color: #f5f5f5;
+        }
+        
+        table,
+        td {
+            border: 1px solid #333;
+        }
+        
+        thead,
+        tfoot {
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</body>
+
+<script src="cubegame_leveldesign.js"></script>
+
+</html>

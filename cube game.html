@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Cube game</title>
+
+  </head>
+
+  <body>
+
+    <canvas id="cubeBoard" width="800" height="600"></canvas>
+
+    <style>
+    *{
+        background-color : #154862;
+    }
+      #cubeBoard {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+    </style>
+  </body>
+
+  <script>
+    const board_border = 'black';
+    let dx = 0;
+    let dy = 0;
+    const board_background = "white";
+    const cube_col = 'lightblue';
+    const cube_border = 'darkblue';
+    const cubeBoard = document.getElementById("cubeBoard");
+    var can_teleport=true;
+    var cubePerso = {x: 150,y: 290 }
+
+    const boost = {}
+
+    const finalZone =   {x: 640,y: 240 }
+
+    const mur = [   
+   {x: 100,y: 210 }, 
+   {x: 100,y: 220 }, 
+   {x: 100,y: 230 }, 
+   {x: 100,y: 240 }, 
+   {x: 100,y: 250 }, 
+   {x: 100,y: 260 }, 
+   {x: 100,y: 270 }, 
+   {x: 100,y: 280 }, 
+   {x: 100,y: 290 }, 
+   {x: 100,y: 300 }, 
+   {x: 100,y: 310 }, 
+   {x: 100,y: 320 }, 
+   {x: 110,y: 320 }, 
+   {x: 120,y: 320 }, 
+   {x: 130,y: 320 }, 
+   {x: 140,y: 320 }, 
+   {x: 150,y: 320 }, 
+   {x: 160,y: 320 }, 
+   {x: 170,y: 320 }, 
+   {x: 180,y: 320 }, 
+   {x: 190,y: 320 }, 
+   {x: 190,y: 210 }, 
+   {x: 180,y: 210 }, 
+   {x: 170,y: 210 }, 
+   {x: 160,y: 210 }, 
+   {x: 150,y: 210 }, 
+   {x: 140,y: 210 }, 
+   {x: 130,y: 210 }, 
+   {x: 120,y: 210 }, 
+   {x: 110,y: 210 }, 
+   {x: 200,y: 320 }, 
+   {x: 200,y: 310 }, 
+   {x: 200,y: 300 }, 
+   {x: 200,y: 290 }, 
+   {x: 200,y: 280 }, 
+   {x: 200,y: 270 }, 
+   {x: 200,y: 260 }, 
+   {x: 200,y: 250 }, 
+   {x: 200,y: 240 }, 
+   {x: 200,y: 230 }, 
+   {x: 200,y: 220 }, 
+   {x: 200,y: 210 }, 
+   {x: 690,y: 320 }, 
+   {x: 680,y: 320 }, 
+   {x: 670,y: 320 }, 
+   {x: 660,y: 320 }, 
+   {x: 650,y: 320 }, 
+   {x: 640,y: 320 }, 
+   {x: 630,y: 320 }, 
+   {x: 620,y: 320 }, 
+   {x: 610,y: 320 }, 
+   {x: 600,y: 320 }, 
+   {x: 590,y: 310 }, 
+   {x: 590,y: 300 }, 
+   {x: 590,y: 290 }, 
+   {x: 590,y: 280 }, 
+   {x: 590,y: 210 }, 
+   {x: 640,y: 210 }, 
+   {x: 690,y: 210 }, 
+   {x: 690,y: 220 }, 
+   {x: 690,y: 230 }, 
+   {x: 690,y: 240 }, 
+   {x: 690,y: 250 }, 
+   {x: 690,y: 260 }, 
+   {x: 690,y: 270 }, 
+   {x: 690,y: 280 }, 
+   {x: 690,y: 290 }, 
+   {x: 690,y: 300 }, 
+   {x: 690,y: 310 }, 
+   {x: 590,y: 320 }, 
+   {x: 590,y: 270 }, 
+   {x: 590,y: 260 }, 
+   {x: 590,y: 250 }, 
+   {x: 590,y: 240 }, 
+   {x: 590,y: 230 }, 
+   {x: 590,y: 220 }, 
+   {x: 600,y: 210 }, 
+   {x: 610,y: 210 }, 
+   {x: 620,y: 210 }, 
+   {x: 630,y: 210 }, 
+   {x: 640,y: 210 }, 
+   {x: 650,y: 210 }, 
+   {x: 660,y: 210 }, 
+   {x: 670,y: 210 }, 
+   {x: 680,y: 210 }
+    ]
+
+    const teleporteur = [
+    {x: 150,y: 240 }, 
+    {x: 640,y: 290 }, 
+    ]
+
+    
+
+
+
+    let changing_direction = false;    
+
+    const cube_ctx = cubeBoard.getContext("2d");
+    let tick = 0;
+    document.addEventListener("keydown", change_direction);
+    main();
+
+    function main() {
+        clear_board();
+        teleport();
+        drawCube();
+       
+   }
+
+    function drawCube() {
+        cube_ctx.fillStyle = cube_col;
+
+        cube_ctx.strokestyle = cube_border;
+
+        cube_ctx.fillRect(cubePerso.x, cubePerso.y, 10, 10)
+
+        cube_ctx.strokeRect(cubePerso.x, cubePerso.y, 10, 10)
+
+    }
+
+    function draw_final() {
+        cube_ctx.fillStyle = 'green';
+
+        cube_ctx.strokestyle = 'black';
+
+        cube_ctx.fillRect(finalZone.x, finalZone.y, 10, 10)
+
+        cube_ctx.strokeRect(finalZone.x, finalZone.y, 10, 10)
+    }
+
+    function draw_walls() {
+        for (var i = 0; i < mur.length; i++) {
+            cube_ctx.fillStyle = 'red';
+
+            cube_ctx.strokestyle = 'black';
+
+            cube_ctx.fillRect(mur[i].x, mur[i].y, 10, 10)
+
+            cube_ctx.strokeRect(mur[i].x, mur[i].y, 10, 10)
+        }
+    }
+
+    function draw_tp() {
+        for (var i = 0; i < teleporteur.length; i++) {
+            cube_ctx.fillStyle = 'purple';
+
+            cube_ctx.strokestyle = 'black';
+
+            cube_ctx.fillRect(teleporteur[i].x, teleporteur[i].y, 10, 10)
+
+            cube_ctx.strokeRect(teleporteur[i].x, teleporteur[i].y, 10, 10)
+        }
+    }
+
+    function clear_board() {
+
+        cube_ctx.fillStyle = board_background;
+
+        cube_ctx.strokestyle = board_border;
+
+        cube_ctx.fillRect(0, 0, cubeBoard.width, cubeBoard.height);
+
+        cube_ctx.strokeRect(0, 0, cubeBoard.width, cubeBoard.height);
+
+        draw_walls();
+        draw_final();
+        draw_tp();
+    }
+
+    function change_direction(event) {
+      const LEFT_KEY = 81;
+      const RIGHT_KEY = 68;
+      const UP_KEY = 90;
+      const DOWN_KEY = 83;
+      const keyPressed = event.keyCode;
+      if (keyPressed === LEFT_KEY && cubePerso.x > 0) {
+            dx = -10;
+            dy = 0;
+      }
+      else if (keyPressed === UP_KEY && cubePerso.y > 0) {
+            dx = 0;
+            dy = -10;
+      }
+      else if (keyPressed === RIGHT_KEY && cubePerso.x < 800) {
+            dx = 10;
+            dy = 0;
+      }
+      else if (keyPressed === DOWN_KEY && cubePerso.y < 600) {
+            dx = 0;
+            dy = 10;
+      } else {
+          dy = 0;
+          dx = 0;
+      }
+
+        if(!wall_touched()) {
+            cubePerso.x = cubePerso.x + dx;
+            cubePerso.y = cubePerso.y + dy;
+        }
+
+        if(win()) {
+            alert("tu as fini le niveau !")
+        }
+        main();
+    }
+    
+    function wall_touched() {
+        for (var i = 0; i < mur.length; i++) {
+            if(cubePerso.x + dx == mur[i].x && cubePerso.y +dy == mur[i].y) return true     
+        }       
+    }
+    
+    function teleport() {
+        for (var i = 0;i < teleporteur.length; i++) {
+            if(cubePerso.x == teleporteur[i].x && cubePerso.y == teleporteur[i].y && can_teleport == true) {
+                can_teleport = false;
+                if(i == 0) {
+                    cubePerso.x = teleporteur[1].x;
+                    cubePerso.y = teleporteur[1].y;
+                } else {
+                    cubePerso.x = teleporteur[0].x;
+                    cubePerso.y = teleporteur[0].y;
+                }
+            } else {         
+                can_teleport = true;
+            }
+        }
+    }
+
+    function win() {
+        if(cubePerso.x == finalZone.x && cubePerso.y == finalZone.y) return true
+    }
+
+
+
+</script>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Cube game</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="cookiesContent" id="cookiesPopup">
+            <button class="close">✖</button>
+            <p>We use cookies for improving user experience, analytics and marketing.</p>
+            <button class="accept">That's fine!</button>
+        </div>
+    </div>
+    <canvas id="cubeBoard" width="800" height="600"></canvas>
+
+    <style>
+        * {
+            background-color: #154862;
+        }
+        
+        #cubeBoard {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+        /* Modal Content/Box */
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+        }
+        /* The Close Button */
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        body {
+            font-family: "Roboto", sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        .cookiesContent {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            color: #000;
+            text-align: center;
+            border-radius: 20px;
+            padding: 30px 30px 70px;
+        }
+        
+        button.close {
+            width: 30px;
+            font-size: 20px;
+            color: #c0c5cb;
+            align-self: flex-end;
+            background-color: transparent;
+            border: none;
+            margin-bottom: 10px;
+        }
+        
+        img {
+            width: 82px;
+            margin-bottom: 15px;
+        }
+        
+        p {
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        button.accept {
+            background-color: #ed6755;
+            border: none;
+            border-radius: 5px;
+            width: 200px;
+            padding: 14px;
+            font-size: 16px;
+            color: white;
+            box-shadow: 0px 6px 18px -5px rgba(237, 103, 85, 1);
+        }
+    </style>
+</body>
+
+<noscript>
+  Ce jeu fonctionne uniquement avec JavaScript. Merci de l'activer
+</noscript>
+<script>
+    var cubePerso = {
+        x: 150,
+        y: 290
+    }
+
+    const boost = {}
+
+    const finalZone = {
+        x: 640,
+        y: 240
+    }
+
+    const mur = [{
+        x: 100,
+        y: 230
+    }, {
+        x: 100,
+        y: 240
+    }, {
+        x: 100,
+        y: 250
+    }, {
+        x: 100,
+        y: 260
+    }, {
+        x: 100,
+        y: 270
+    }, {
+        x: 100,
+        y: 280
+    }, {
+        x: 100,
+        y: 290
+    }, {
+        x: 100,
+        y: 300
+    }, {
+        x: 100,
+        y: 310
+    }, {
+        x: 100,
+        y: 320
+    }, {
+        x: 110,
+        y: 320
+    }, {
+        x: 120,
+        y: 320
+    }, {
+        x: 130,
+        y: 320
+    }, {
+        x: 140,
+        y: 320
+    }, {
+        x: 150,
+        y: 320
+    }, {
+        x: 160,
+        y: 320
+    }, {
+        x: 170,
+        y: 320
+    }, {
+        x: 180,
+        y: 320
+    }, {
+        x: 190,
+        y: 320
+    }, {
+        x: 190,
+        y: 210
+    }, {
+        x: 180,
+        y: 210
+    }, {
+        x: 170,
+        y: 210
+    }, {
+        x: 160,
+        y: 210
+    }, {
+        x: 150,
+        y: 210
+    }, {
+        x: 140,
+        y: 210
+    }, {
+        x: 130,
+        y: 210
+    }, {
+        x: 120,
+        y: 210
+    }, {
+        x: 110,
+        y: 210
+    }, {
+        x: 200,
+        y: 320
+    }, {
+        x: 200,
+        y: 310
+    }, {
+        x: 200,
+        y: 300
+    }, {
+        x: 200,
+        y: 290
+    }, {
+        x: 200,
+        y: 280
+    }, {
+        x: 200,
+        y: 270
+    }, {
+        x: 200,
+        y: 260
+    }, {
+        x: 200,
+        y: 250
+    }, {
+        x: 200,
+        y: 240
+    }, {
+        x: 200,
+        y: 230
+    }, {
+        x: 200,
+        y: 220
+    }, {
+        x: 200,
+        y: 210
+    }, {
+        x: 690,
+        y: 320
+    }, {
+        x: 680,
+        y: 320
+    }, {
+        x: 670,
+        y: 320
+    }, {
+        x: 660,
+        y: 320
+    }, {
+        x: 650,
+        y: 320
+    }, {
+        x: 640,
+        y: 320
+    }, {
+        x: 630,
+        y: 320
+    }, {
+        x: 620,
+        y: 320
+    }, {
+        x: 610,
+        y: 320
+    }, {
+        x: 600,
+        y: 320
+    }, {
+        x: 590,
+        y: 310
+    }, {
+        x: 590,
+        y: 300
+    }, {
+        x: 590,
+        y: 290
+    }, {
+        x: 590,
+        y: 280
+    }, {
+        x: 590,
+        y: 210
+    }, {
+        x: 640,
+        y: 210
+    }, {
+        x: 690,
+        y: 210
+    }, {
+        x: 690,
+        y: 220
+    }, {
+        x: 690,
+        y: 230
+    }, {
+        x: 690,
+        y: 240
+    }, {
+        x: 690,
+        y: 250
+    }, {
+        x: 690,
+        y: 260
+    }, {
+        x: 690,
+        y: 270
+    }, {
+        x: 690,
+        y: 280
+    }, {
+        x: 690,
+        y: 290
+    }, {
+        x: 690,
+        y: 300
+    }, {
+        x: 690,
+        y: 310
+    }, {
+        x: 590,
+        y: 320
+    }, {
+        x: 590,
+        y: 270
+    }, {
+        x: 590,
+        y: 260
+    }, {
+        x: 590,
+        y: 250
+    }, {
+        x: 590,
+        y: 240
+    }, {
+        x: 590,
+        y: 230
+    }, {
+        x: 590,
+        y: 220
+    }, {
+        x: 600,
+        y: 210
+    }, {
+        x: 610,
+        y: 210
+    }, {
+        x: 620,
+        y: 210
+    }, {
+        x: 630,
+        y: 210
+    }, {
+        x: 640,
+        y: 210
+    }, {
+        x: 650,
+        y: 210
+    }, {
+        x: 660,
+        y: 210
+    }, {
+        x: 670,
+        y: 210
+    }, {
+        x: 680,
+        y: 210
+    }]
+
+    const teleporteur = [{
+        x: 150,
+        y: 240
+    }, {
+        x: 640,
+        y: 290
+    }, ]
+</script>
+<script src="cubegame.js">
+</script>
+
+</html>
